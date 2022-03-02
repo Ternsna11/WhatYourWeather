@@ -1,3 +1,171 @@
+
+
+// useEffect(async () => {
+  //   console.log("location ", location);
+  //   if (location) {
+  // await fetchWeather();
+  // console.log("location ", location);
+  // const data = await fetchWeather();
+  // const data = await axios.get(`${location_api.base}=${location.lat},${location.lng}&key=${location_api.key}`)
+  // console.log("data: ", data);
+  // setResponseObj((responseObj) => ({
+  //   ...responseObj,
+  //   location: data.data.results
+  // }))
+  // console.log("responseObj: ", responseObj)
+  // return data;
+  // await fetchWeather().then((res) => {
+  //   setResponseObj(res);
+  // });
+  //   }
+  // }, [responseObj])
+
+
+// import React, { useEffect, useState } from "react";
+
+// const location_api = {
+//   // key: `${process.env.REACT_APP_API_KEY}`,
+//   key: "AIzaSyBi6I_cyEBGjPYnKBnCpRvwj6SXx8iVBD8",
+//   base: "https://maps.googleapis.com/maps/api/geocode/json?address",
+// };
+
+// const weather_api = {
+//   // key: `${process.env.REACT_APP_API_KEY}`,
+//   key: "800a3f8dc7a089347269a3957e059ee1",
+//   base: "api.openweathermap.org/data/2.5/weather?lat=",
+// };
+// export default function ZipInput() {
+//   const [zip, setZip] = useState();
+//   const [location, setLocation] = useState({ lat: "", lng: "" });
+//   const [responseObj, setResponseObj] = useState({});
+
+//   const fetchData = async () => {
+//     try {
+//       console.log("zip line 21: ", zip);
+//       // parseInt(zip)
+//       const response = await fetch(
+//         `${location_api.base}=${zip}&key=${location_api.key}`
+//       );
+//       const json = await response.json();
+//       console.log("json line 55: ", json.results);
+
+//       // let geometry = json.results[0].geometry.location;
+//       let geometry = json.results;
+//       console.log("geometry line 28: ", geometry);
+//       setLocation(geometry);
+
+//       const weatherResponse = await fetch(
+//         `${weather_api.base}${geometry.lat}&lon=${geometry.lng}&units=imperial&appid=${weather_api.key}`
+//       ).then(async (response) => {
+//         try {
+//           await setResponseObj(response);
+//           console.log("responseObj line 82: ", responseObj);
+
+//           const weatherJson = await response.text();
+//           JSON.parse(JSON.stringify(weatherJson['weather'[0]]))
+//           console.log("weatherJson line 86: ", weatherJson);
+//           // let foo = JSON.parse(weatherJson)
+//           // console.log("foo line 78: ", foo);
+//         } catch (error) {
+//           console.log("Error happened here!");
+//           console.error(error.message);
+//         }
+//       });
+//     } catch (err) {
+//       console.log(err);
+//     }
+//   };
+//   useEffect(() => {
+//     fetchData();
+//   }, [zip]);
+
+//   // useEffect(()=>{
+//   //   searchFollowing();
+//   //   // if(location.lat && location.lon){
+//   //   // if(zip){
+//   //   //   searchFollowing();
+//   //   // }
+//   // // }, [location])
+//   // }, [zip])
+
+//   // const search = async (e) => {
+//   //   e.preventDefault();
+//   //   setZip(e.target.value);
+//   //   zip.split("").join("");
+//   //   console.log("zip: ", zip);
+//   //   if (e.key === 'Enter') {
+//   //     fetch(`${location_api.base}=${zip}&key=${location_api.key}`)
+//   //     .then(res => res.json())
+//   //     .then(result => {
+//   //       // setLocation(geometry);
+//   //       // setQuery('');
+//   //       setLocation(result.coord);
+//   //     })
+//   //   }
+//   // }
+
+//   // const searchFollowing = async () => {
+//   //   const { lat, lon } = location;
+//   //   fetch(`${weather_api.base}${lat}&lon=${lon}&units=imperial&appid=${weather_api.key}`)
+//   //   .then(res => res.json())
+//   //   .then(result2 => {
+//   //     setResponseObj(result2);
+//   //       console.log("responseObj: ", responseObj);
+//   //     //  setFollowing(array);
+//   //   })
+//   // }
+
+//   const submitHandler = (event) => {
+//     event.preventDefault();
+//     // event.stopPropagation();
+//     setZip(zip);
+//     // console.log("zip", zip);
+//   };
+
+//   return (
+//     <div className="input-group ml-3">
+//       <form className="form-control pb-3" onSubmit={submitHandler}>
+//         <label
+//           htmlFor="zip"
+//           className="form-label m-4 "
+//           aria-placeholder="Enter a zip code: "
+//         >
+//           Enter a zip code:
+//           <input
+//             type="number"
+//             id="zip"
+//             className="form-control mt-2"
+//             placeholder="ex. 53149"
+//             // eslint-disable-next-line no-script-url
+//             aria-labelledby="zip"
+//             value={zip}
+//             maxLength="5"
+//             onChange={(e) => setZip(e.target.value)}
+//             // onKeyPress={search}
+//             required
+//             // onChange={(event) => {
+//             //   const { value } = event.target;
+//             //   setZip(value.replace(/[^\d{5}]$/, "").substring(0, 5));
+//             // }}
+//           />
+//         </label>
+//         <input
+//           className="btn btn-outline-primary"
+//           type="submit"
+//           value="Submit"
+//         />
+//       </form>
+
+//       {/* <p key={responseObj.id}> responseObj: {responseObj}\n</p> */}
+//     </div>
+//   );
+// }
+
+
+
+
+
+
 // import React, { useEffect, useState } from "react";
 // const LOCATION_API_key = "AIzaSyBi6I_cyEBGjPYnKBnCpRvwj6SXx8iVBD8";
 // const LOCATION_API = `https://maps.googleapis.com/maps/api/geocode/json?address=${zip}&key=${LOCATION_API_key}`;
