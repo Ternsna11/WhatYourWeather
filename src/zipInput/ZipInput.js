@@ -1,108 +1,72 @@
 import React, { useEffect, useState } from "react";
 const axios = require("axios");
+
 const location_api = {
   // key: `${process.env.REACT_APP_API_KEY}`,
   key: "AIzaSyBi6I_cyEBGjPYnKBnCpRvwj6SXx8iVBD8",
   base: "https://maps.googleapis.com/maps/api/geocode/json?address",
 };
-
 const weather_api = {
   // key: `${process.env.REACT_APP_API_KEY}`,
   key: "800a3f8dc7a089347269a3957e059ee1",
-  base: "api.openweathermap.org/data/2.5/weather?",
+  base: "https://api.openweathermap.org/data/2.5/weather?",
 };
 export default function ZipInput() {
+  // state variables
   const [zip, setZip] = useState();
   const [location, setLocation] = useState({ lat: "", lng: "" });
   const [responseObj, setResponseObj] = useState({});
   const [error, setError] = useState(false);
+  const [message, setMessage] = useState({});
+  const [latitude, setLatitude] = useState(-33.7560119);
+  const [longitude, setLongitude] = useState(150.6038367);
 
-  
+  useEffect(() => latitude && longitude && axios.get(
+            `${weather_api.base}lat=${latitude}&lon=${longitude}&units=imperial&appid=${weather_api.key}`
+          )
+          .then((res) => {
+            setResponseObj(res.data)
+            console.log("res.data line 33: ", res.data)
+            setMessage(res.data.weather[0].description);
+            return res.data;
+          })
+          .catch(error => setError(error))
+, [latitude, longitude]);
 
-  // const fetchData = () => {
   const fetchData = async () => {
     try {
-      // const response = await axios.get(`${location_api.base}=${zip}&key=${location_api.key}`)
-      // eslint-disable-next-line
-      const response = await axios.get(`${location_api.base}=${zip}&key=${location_api.key}`)
-      // .then((response) => setLocation(response));
-      console.log("response line 51: ", response.data.results[0]);
-      setLocation(response.data.results[0]);
-      return response.data.results[0];
-        // {
-        //   setLocation(() => {
-        //     const foo = response.data.results[0];
-        //     console.log("foo: ", foo);
-        //     return foo;
-        //   });
-          // return response;
-        // });
-      // const weather = "foo";
-    } catch (error) {
-      setError(true);
-    }
-  };
-  // const fetchWeather = async () => {
-  //   // const fetchWeather = () => {
-  //   try {
-  //     const { lat, lng } = location;
-  //     return await fetch(
-  //       `${weather_api.base}${lat}&lon=${lng}&units=imperial&appid=${weather_api.key}`
-  //     )
-  //       // fetch(`${weather_api.base}${lat}&lon=${lng}&units=imperial&appid=${weather_api.key}`)
-  //       .then((response) => {
-  //         setResponseObj(response);
-  //         console.log("responseObj ", responseObj.data);
-  //         setError(false);
-  //       });
-  //   } catch (error) {
-  //     setError(true);
-  //   }
-  // };
-  
+      const { data } = await axios.get(`${location_api.base}=${zip}&key=${location_api.key}`);
+      console.log("data: ", data);
+      // fetches data from our api
+      setZip(zip);
+      setLocation(data);
+      setLatitude(data.results[0].geometry.location.lat)
+      setLongitude(data.results[0].geometry.location.lng)
+      setMessage({ text: 'Loading..', variant: 'info' });
+      setResponseObj(data);
 
-  const submitHandler = async (event) => {
+      return data;
+      
+    } catch(error){
+      console.log("error: ", error.message);
+      setError(true);
+      setMessage({text: 'Something went wrong..', variant: 'danger', error: error.message})
+    };
+  };
+  
+  const submitHandler = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    await fetchData(zip)
-    .then((res) => {
-      console.log("res line 90: ", res);
-      setLocation(res);
-    });
-    setZip(zip);
-    // console.log("zip", zip);
+    setMessage({text: 'Loading..', variant: 'info'})
+    fetchData()
+    .catch(() => setMessage({text: 'Something went wrong..', variant: 'danger', error: error.message}))
   };
 
-  useEffect(() => {
-    // eslint-disable-next-line
-    // if (location.lat && location.lng) {
-    const fetchWeather = async () => {
-      try {
-        const { geometry: { location: {lat, lng}} } = location;
-        console.log("lat 80: ", lat);
-        console.log("lng 81: ", lng);
-        if (lat && lng) {
-          const response = await axios.get(
-            `${weather_api.base}lat=${lat}&lon=${lng}&units=imperial&appid=${weather_api.key}`
-          )
-          // .then((response) => setResponseObj(response.data));
-          console.log("response line 90: ", response);
-          setResponseObj(response.data);
-          console.log("responseObj line 92: ", responseObj);
-          return response;
-        };
-      } catch (error) {
-        console.log("error line 96: ", error.message);
-        setError(true);
-      }
-    }
-    fetchWeather();
-    // eslint-disable-next-line
-  }, [location]);
+  const { main, name } = responseObj;
 
   return (
     <div>
-      {/* <p className={`alert alert-${message.variant}`}>{message.text}</p> */}
+      <p className={`alert alert-${message.variant}`}>{message.text}</p>
       <form  className="input-group my-3 px-4" onSubmit={submitHandler}>
       <label
         htmlFor="zip"
@@ -114,7 +78,6 @@ export default function ZipInput() {
         id="zip"
         className="form-control mt-2"
         placeholder="ex. 53149"
-        // eslint-disable-next-line no-script-url
         aria-labelledby="zip"
         value={zip || ""}
         maxLength="5"
@@ -123,10 +86,19 @@ export default function ZipInput() {
       />
       </label>
       <input className="btn btn-outline-primary" type="submit" value="Submit" />
-
-      {/* <p key={responseObj.id}> responseObj: {responseObj}\n</p> */}
     </form>
+
+    <div className="card m-4">
+      <div className="card-body">
+        <h5 className="card-title">{responseObj.name}</h5>
+      {name}
+      
+        <p className="card-text" key={responseObj}>
+          <span className="font-weight-bold">information: </span>
+          {JSON.stringify(responseObj)}
+        </p>
+        </div>
+      </div>
     </div>
-    
   );
 }
